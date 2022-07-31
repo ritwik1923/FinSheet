@@ -1,16 +1,14 @@
-# finsheet
+# todo
+## shared preferance to store tags
+## portal for last month , last 7 days expenditure
+## add custom query in database
+## inport / export data from excel or csv file
+## create widget to add price with tags
+## shimmering loading screen in flutter
 
-A new Flutter project.
 
-## Getting Started
+# done
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# note
+## scrcpy

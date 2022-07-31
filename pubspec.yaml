@@ -44,12 +44,15 @@ dependencies:
   intl: any
   collection: ^1.14.13
   fl_chart: ^0.55.0
-
+  objectbox: ^1.6.0
+  objectbox_sync_flutter_libs: ^1.6.0
 dev_dependencies:
 
   auto_route_generator: ^3.2.1
   build_runner: ^2.1.7
   equatable: ^2.0.3
+  objectbox_generator: ^1.6.0
+
   flutter_lints: ^1.0.0
   flutter_test:
     sdk: flutter
