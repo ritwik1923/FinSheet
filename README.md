@@ -4,7 +4,6 @@
 </p>
 
 
-
 ### todo
 - [x]  portal for last month , last 7 days expenditure
 - [ ]  add custom query in database
