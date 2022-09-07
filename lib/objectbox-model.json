@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:597130556451188388",
-      "lastPropertyId": "6:5045220341359881580",
+      "lastPropertyId": "8:39133564886841683",
       "name": "FinModel",
       "flags": 2,
       "properties": [
@@ -42,6 +42,11 @@
           "flags": 520,
           "indexId": "1:2092550809899515516",
           "relationTarget": "TagModel"
+        },
+        {
+          "id": "8:39133564886841683",
+          "name": "type",
+          "type": 1
         }
       ],
       "relations": []
@@ -68,14 +73,18 @@
     }
   ],
   "lastEntityId": "2:8272142424421629591",
-  "lastIndexId": "1:2092550809899515516",
+  "lastIndexId": "2:2085572409331026832",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
-  "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredIndexUids": [
+    2085572409331026832
+  ],
+  "retiredPropertyUids": [
+    5527779836469731786
+  ],
   "retiredRelationUids": [],
   "version": 1
 }

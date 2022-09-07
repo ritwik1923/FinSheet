@@ -21,7 +21,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(1, 597130556451188388),
       name: 'FinModel',
-      lastPropertyId: const IdUid(6, 5045220341359881580),
+      lastPropertyId: const IdUid(8, 39133564886841683),
       flags: 2,
       properties: <ModelProperty>[
         ModelProperty(
@@ -55,7 +55,12 @@ final _entities = <ModelEntity>[
             type: 11,
             flags: 520,
             indexId: const IdUid(1, 2092550809899515516),
-            relationTarget: 'TagModel')
+            relationTarget: 'TagModel'),
+        ModelProperty(
+            id: const IdUid(8, 39133564886841683),
+            name: 'type',
+            type: 1,
+            flags: 0)
       ],
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
@@ -103,12 +108,12 @@ ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
       lastEntityId: const IdUid(2, 8272142424421629591),
-      lastIndexId: const IdUid(1, 2092550809899515516),
+      lastIndexId: const IdUid(2, 2085572409331026832),
       lastRelationId: const IdUid(0, 0),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [],
-      retiredIndexUids: const [],
-      retiredPropertyUids: const [],
+      retiredIndexUids: const [2085572409331026832],
+      retiredPropertyUids: const [5527779836469731786],
       retiredRelationUids: const [],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
@@ -125,13 +130,14 @@ ModelDefinition getObjectBoxModel() {
         },
         objectToFB: (FinModel object, fb.Builder fbb) {
           final commentsOffset = fbb.writeString(object.comments);
-          fbb.startTable(7);
+          fbb.startTable(9);
           fbb.addInt64(0, object.id);
           fbb.addFloat64(1, object.price);
           fbb.addOffset(2, commentsOffset);
           fbb.addInt64(3, object.createdTime.millisecondsSinceEpoch);
           fbb.addInt64(4, object.updatedTime.millisecondsSinceEpoch);
           fbb.addInt64(5, object.tag.targetId);
+          fbb.addBool(7, object.type);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -148,7 +154,9 @@ ModelDefinition getObjectBoxModel() {
               createdTime: DateTime.fromMillisecondsSinceEpoch(
                   const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0)),
               updatedTime: DateTime.fromMillisecondsSinceEpoch(
-                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0)));
+                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0)),
+              type: const fb.BoolReader()
+                  .vTableGet(buffer, rootOffset, 18, false));
           object.tag.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
           object.tag.attach(store);
@@ -219,6 +227,10 @@ class FinModel_ {
   /// see [FinModel.tag]
   static final tag =
       QueryRelationToOne<FinModel, TagModel>(_entities[0].properties[5]);
+
+  /// see [FinModel.type]
+  static final type =
+      QueryBooleanProperty<FinModel>(_entities[0].properties[6]);
 }
 
 /// [TagModel] entity fields to define ObjectBox queries.

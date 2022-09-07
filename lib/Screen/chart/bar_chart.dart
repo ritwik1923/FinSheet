@@ -80,23 +80,25 @@ class _BarGraphState extends State<BarGraph> {
     var w = MediaQuery.of(context).size.width;
     data = widget.xdata;
 
-    return Container(
-      height: 250,
-      padding: const EdgeInsets.fromLTRB(5, 50, 5, 20),
-      child: data.isNotEmpty
-          ? BarChart(
-              BarChartData(
-                  barTouchData: barTouchData,
-                  titlesData: titlesData,
-                  borderData: borderData,
-                  barGroups: barGroups,
-                  gridData: FlGridData(show: false),
-                  alignment: BarChartAlignment.spaceAround,
-                  maxY: mx!, //+ 100.00,
-                  minY: 0 //min(mn!, mx! / 2),
-                  ),
-            )
-          : Center(child: Text("Enter data")),
+    return AspectRatio(
+      aspectRatio: 16 / 9,
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(5, 50, 5, 20),
+        child: data.isNotEmpty
+            ? BarChart(
+                BarChartData(
+                    barTouchData: barTouchData,
+                    titlesData: titlesData,
+                    borderData: borderData,
+                    barGroups: barGroups,
+                    gridData: FlGridData(show: false),
+                    alignment: BarChartAlignment.spaceAround,
+                    maxY: mx!, //+ 100.00,
+                    minY: 0 //min(mn!, mx! / 2),
+                    ),
+              )
+            : Center(child: Text("Enter data")),
+      ),
     );
   }
 

@@ -10,13 +10,15 @@ class FinModel {
   DateTime createdTime;
   DateTime updatedTime;
   final tag = ToOne<TagModel>();
-
+  bool type;
+// true for debit , false for credit
   FinModel({
     this.id = 0,
     required this.price,
     required this.comments,
     required this.createdTime,
     required this.updatedTime,
+    required this.type,
   });
 }
 

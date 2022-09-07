@@ -65,6 +65,10 @@ class FinsheetLoadedDBState extends FinsheetState {
   Future<void> delFin(FinModel data) async {
     store.box<FinModel>().remove(data.id);
   }
+  Future<void> delFinAll() async {
+    store.box<FinModel>().removeAll();
+    store.box<TagModel>().removeAll();
+  }
 
   Future<void> updateFin(FinModel data) async {
     store.box<FinModel>().put(data);
@@ -75,6 +79,7 @@ class FinsheetLoadedDBState extends FinsheetState {
       .query()
       .watch(triggerImmediately: true)
       .map((query) => query.find());
+
   Stream<List<FinModel>> getminExpense() {
     DateTime startDate = DateTime.now().subtract(Duration(minutes: 5));
     DateTime endDate = DateTime.now();
@@ -90,8 +95,6 @@ class FinsheetLoadedDBState extends FinsheetState {
   }
 
   Stream<List<FinModel>> getTodayExpense(int number) {
-    // var time =  DateTime.now();
-
     DateTime startDate = DateTime.utc(
       DateTime.now().year,
       DateTime.now().month,
@@ -99,19 +102,36 @@ class FinsheetLoadedDBState extends FinsheetState {
     );
     DateTime endDate = startDate.add(Duration(days: 1));
     print('1 day s:${startDate},e: ${endDate}');
-    // return store
-    //   .box<FinModel>().query().equal(FinModel_.id, number).between(FinModel_.createdTime, startDate, endDate).build().findFirst();
 
     return store
         .box<FinModel>()
-        .query(FinModel_.createdTime.between(startDate.millisecondsSinceEpoch,
-            endDate.millisecondsSinceEpoch - 1))
-        // DateTime.now().subtract(Duration(minutes: 5)).millisecondsSinceEpoch,
-        // DateTime.now().millisecondsSinceEpoch - 1))
+        // .query(FinModel_.createdTime.between(startDate.millisecondsSinceEpoch,
+        //     endDate.millisecondsSinceEpoch - 1))
+        .query(FinModel_.createdTime.between(
+          DateTime.now().subtract(Duration(days: 1)).millisecondsSinceEpoch,
+          DateTime.now().millisecondsSinceEpoch - 1))
         .watch(triggerImmediately: true)
         .map((query) => query.find());
   }
 
+  /*
+  Stream<List<FinModel>> getTagsExpense(String tag) {
+    
+    return store
+        .box<FinModel>()
+        .query(FinModel_.tag.target
+        .equals('tag'))
+        .watch(triggerImmediately: true)
+        .map((query) => query.find());
+  }
+*/
+  Stream<List<FinModel>> getWeeklyExpense() => store
+      .box<FinModel>()
+      .query(FinModel_.createdTime.between(
+          DateTime.now().subtract(Duration(days: 7)).millisecondsSinceEpoch,
+          DateTime.now().millisecondsSinceEpoch - 1))
+      .watch(triggerImmediately: true)
+      .map((query) => query.find());
   Stream<List<FinModel>> getMonthlyExpense() => store
       .box<FinModel>()
       .query(FinModel_.createdTime.between(
@@ -119,9 +139,11 @@ class FinsheetLoadedDBState extends FinsheetState {
           DateTime.now().millisecondsSinceEpoch - 1))
       .watch(triggerImmediately: true)
       .map((query) => query.find());
-
-  // hasBeenInitialized = true;
-
+  Stream<List<FinModel>> getAllExpense() => store
+      .box<FinModel>()
+      .query()
+      .watch(triggerImmediately: true)
+      .map((query) => query.find());
 }
 
 class FinsheetErrorDBState extends FinsheetState {}
