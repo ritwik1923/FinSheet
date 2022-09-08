@@ -1,6 +1,6 @@
 ### Progress till now
 <p align="center">
-  <img  src="https://user-images.githubusercontent.com/63177644/182031640-38a9cd25-151b-4d14-8383-2bd09bc8f5bd.gif">
+  <img  src="https://user-images.githubusercontent.com/63177644/189164305-fbdc04c5-e65c-4cc5-999a-a5e05f774bab.gif">
 </p>
 
 
