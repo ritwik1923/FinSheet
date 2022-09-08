@@ -19,9 +19,11 @@ import 'package:flutter_lorem/flutter_lorem.dart';
 import 'dart:collection';
 
 import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import 'chart/line_chart.dart';
 
+// TODO check graph accuricy
 class DashBoard extends StatefulWidget {
   const DashBoard({Key? key, required this.title}) : super(key: key);
 
@@ -48,11 +50,6 @@ class _DashBoardState extends State<DashBoard>
     tabController.addListener(() {
       setState(() {
         _selectedIndex = tabController.index;
-        //   if (_selectedIndex == 0) {
-        //     context.read<FinsheetBloc>().add(FinLoadDataEvent());
-        //   } else if (_selectedIndex == 1) {
-        //     context.read<FinsheetBloc>().add(FinLoadDataReportEvent());
-        //   } else if (_selectedIndex == 2) {}
       });
       print("Selected Index: " + tabController.index.toString());
     });
@@ -74,137 +71,39 @@ class _DashBoardState extends State<DashBoard>
     }
   }
 
-  Widget DataEntry() {
-    double const_padding = 0;
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              "Add Expenditure",
-              style: TextStyle(fontSize: 20),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(const_padding),
-            child: Form(
-              key: _formKey,
-              child: Column(children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 8, top: 8),
-                        child: TextFormField(
-                          controller: _tagInputController,
-                          key: const Key('input'),
-                          validator: (value) =>
-                              value!.isEmpty ? 'tag cannot be blank' : null,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(
-                                // borderSide: BorderSide(color: Colors.teal),
-                                ),
-                            hintText: 'Enter Tag',
-                            helperText: 'Write new tag here.',
-                            labelText: 'Tag',
-                            // prefixIcon: const Icon(
-                            //   Icons.person,
-                            //   color: Colors.green,
-                            // ),
-                            // prefixText: ' ',
-                            // suffixText: 'USD',
-                            // suffixStyle: const TextStyle(color: Colors.green),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 3,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 8, top: 8),
-                        child: TextFormField(
-                          controller: _priceInputController,
-                          key: const Key('input'),
-                          validator: (value) =>
-                              value!.isEmpty ? 'price cannot be blank' : null,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(
-                                // borderSide: BorderSide(color: Colors.teal),
-                                ),
-                            hintText: 'Enter Price',
-                            helperText: 'Write Price here.',
-                            labelText: 'Price',
-                            // prefixIcon: const Icon(
-                            //   Icons.person,
-                            //   color: Colors.green,
-                            // ),
-                            // prefixText: ' ',
-                            // suffixText: 'USD',
-                            // suffixStyle: const TextStyle(color: Colors.green),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.all(8),
-                  child: TextFormField(
-                    controller: _commentInputController,
-                    key: const Key('input'),
-                    keyboardType: TextInputType.multiline,
-                    minLines: 3, //Normal textInputField will be displayed
-                    maxLines: 5, // when user presses enter it will adapt to it
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(
-                          // borderSide: BorderSide(color: Colors.teal),
-                          ),
-                      hintText: 'Enter comment',
-                      helperText: 'Write comment here.',
-                      labelText: 'comment',
-                    ),
-                  ),
-                ),
-                Row(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          type = true;
-                          print("add $type");
-                        });
-                      },
-                      icon: Icon(Icons.add_box_outlined),
-                      color: type == true
-                          ? Colors.lightBlueAccent
-                          : Colors.white60,
-                    ),
-                    Text("$type"),
-                    IconButton(
-                        onPressed: () {
-                          setState(() {
-                            type = false;
-                            print("min $type");
-                          });
-                        },
-                        icon: Icon(Icons.indeterminate_check_box_outlined,
-                            color: type == false
-                                ? Colors.lightBlueAccent
-                                : Colors.white60)),
-                    // icon: Icon(Icons.call_made_outlined)),
-                  ],
-                ),
-              ]),
-            ),
-          ),
-        ],
-      ),
-    );
+  String _selectedDate = '';
+  String _dateCount = '';
+  String _range = '';
+  String _rangeCount = '';
+
+  /// The method for [DateRangePickerSelectionChanged] callback, which will be
+  /// called whenever a selection changed on the date picker widget.
+  void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
+    /// The argument value will return the changed date as [DateTime] when the
+    /// widget [SfDateRangeSelectionMode] set as single.
+    ///
+    /// The argument value will return the changed dates as [List<DateTime>]
+    /// when the widget [SfDateRangeSelectionMode] set as multiple.
+    ///
+    /// The argument value will return the changed range as [PickerDateRange]
+    /// when the widget [SfDateRangeSelectionMode] set as range.
+    ///
+    /// The argument value will return the changed ranges as
+    /// [List<PickerDateRange] when the widget [SfDateRangeSelectionMode] set as
+    /// multi range.
+    setState(() {
+      if (args.value is PickerDateRange) {
+        _range = '${DateFormat('dd/MM/yyyy').format(args.value.startDate)} -'
+            // ignore: lines_longer_than_80_chars
+            ' ${DateFormat('dd/MM/yyyy').format(args.value.endDate ?? args.value.startDate)}';
+      } else if (args.value is DateTime) {
+        _selectedDate = args.value.toString();
+      } else if (args.value is List<DateTime>) {
+        _dateCount = args.value.length.toString();
+      } else {
+        _rangeCount = args.value.length.toString();
+      }
+    });
   }
 
   @override
@@ -355,234 +254,6 @@ class _DashBoardState extends State<DashBoard>
                           context,
                           MaterialPageRoute(
                               builder: (context) => const AddData()));
-                      /*
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return StatefulBuilder(
-                            builder:
-                                (BuildContext context, StateSetter setState) {
-                              return Scaffold(
-                                body: Container(
-                                  height: MediaQuery.of(context).size.height,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 0),
-                                    child: SingleChildScrollView(
-                                      // title: Text('Add Data'),
-                                      child: Column(
-                                        children: [
-                                          // DataEntry(),
-                                          SingleChildScrollView(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                const Padding(
-                                                  padding: EdgeInsets.all(8.0),
-                                                  child: Text(
-                                                    "Add Expenditure",
-                                                    style:
-                                                        TextStyle(fontSize: 20),
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsets.all(
-                                                      const_padding),
-                                                  child: Form(
-                                                    key: _formKey,
-                                                    child: Column(children: [
-                                                      Row(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Expanded(
-                                                            flex: 2,
-                                                            child: Padding(
-                                                              padding: EdgeInsets
-                                                                  .only(
-                                                                      left: 8,
-                                                                      top: 8),
-                                                              child:
-                                                                  TextFormField(
-                                                                controller:
-                                                                    _tagInputController,
-                                                                key: const Key(
-                                                                    'input'),
-                                                                validator: (value) =>
-                                                                    value!.isEmpty
-                                                                        ? 'tag cannot be blank'
-                                                                        : null,
-                                                                decoration:
-                                                                    const InputDecoration(
-                                                                  border: OutlineInputBorder(
-                                                                      // borderSide: BorderSide(color: Colors.teal),
-                                                                      ),
-                                                                  hintText:
-                                                                      'Enter Tag',
-                                                                  helperText:
-                                                                      'Write new tag here.',
-                                                                  labelText:
-                                                                      'Tag',
-                                                                  // prefixIcon: const Icon(
-                                                                  //   Icons.person,
-                                                                  //   color: Colors.green,
-                                                                  // ),
-                                                                  // prefixText: ' ',
-                                                                  // suffixText: 'USD',
-                                                                  // suffixStyle: const TextStyle(color: Colors.green),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          Expanded(
-                                                            flex: 3,
-                                                            child: Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      left: 8,
-                                                                      top: 8),
-                                                              child:
-                                                                  TextFormField(
-                                                                controller:
-                                                                    _priceInputController,
-                                                                key: const Key(
-                                                                    'input'),
-                                                                validator: (value) =>
-                                                                    value!.isEmpty
-                                                                        ? 'price cannot be blank'
-                                                                        : null,
-                                                                decoration:
-                                                                    const InputDecoration(
-                                                                  border: OutlineInputBorder(
-                                                                      // borderSide: BorderSide(color: Colors.teal),
-                                                                      ),
-                                                                  hintText:
-                                                                      'Enter Price',
-                                                                  helperText:
-                                                                      'Write Price here.',
-                                                                  labelText:
-                                                                      'Price',
-                                                                  // prefixIcon: const Icon(
-                                                                  //   Icons.person,
-                                                                  //   color: Colors.green,
-                                                                  // ),
-                                                                  // prefixText: ' ',
-                                                                  // suffixText: 'USD',
-                                                                  // suffixStyle: const TextStyle(color: Colors.green),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsets.all(8),
-                                                        child: TextFormField(
-                                                          controller:
-                                                              _commentInputController,
-                                                          key: const Key(
-                                                              'input'),
-                                                          keyboardType:
-                                                              TextInputType
-                                                                  .multiline,
-                                                          minLines:
-                                                              3, //Normal textInputField will be displayed
-                                                          maxLines:
-                                                              5, // when user presses enter it will adapt to it
-                                                          decoration:
-                                                              const InputDecoration(
-                                                            border: OutlineInputBorder(
-                                                                // borderSide: BorderSide(color: Colors.teal),
-                                                                ),
-                                                            hintText:
-                                                                'Enter comment',
-                                                            helperText:
-                                                                'Write comment here.',
-                                                            labelText:
-                                                                'comment',
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Row(
-                                                        children: [
-                                                          IconButton(
-                                                            onPressed: () {
-                                                              setState(() {
-                                                                type = true;
-                                                                print(
-                                                                    "add $type");
-                                                              });
-                                                            },
-                                                            icon: Icon(Icons
-                                                                .add_box_outlined),
-                                                            color: type == true
-                                                                ? Colors
-                                                                    .lightBlueAccent
-                                                                : Colors
-                                                                    .white60,
-                                                          ),
-                                                          Text("$type"),
-                                                          IconButton(
-                                                              onPressed: () {
-                                                                setState(() {
-                                                                  type = false;
-                                                                  print(
-                                                                      "min $type");
-                                                                });
-                                                              },
-                                                              icon: Icon(
-                                                                  Icons
-                                                                      .indeterminate_check_box_outlined,
-                                                                  color: type ==
-                                                                          false
-                                                                      ? Colors
-                                                                          .lightBlueAccent
-                                                                      : Colors
-                                                                          .white60)),
-                                                          // icon: Icon(Icons.call_made_outlined)),
-                                                        ],
-                                                      ),
-                                                    ]),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              ElevatedButton(
-                                                  child: Text("Submit"),
-                                                  onPressed: () async {
-                                                    // your code
-                                                    await _addprice();
-                                                    validateAndSave();
-                                                    Navigator.pop(context);
-                                                  })
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      );
-                      */
                     },
                     child: Icon(Icons.add),
                   ),
@@ -871,45 +542,150 @@ class _DashBoardState extends State<DashBoard>
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(4)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                StreamBuilder<List<FinModel>>(
-                                    stream: state.getMonthlyExpense(),
-                                    // stream: state.getAllExpense(),
-                                    builder: (context, snapshot) {
-                                      if (!snapshot.hasData) {
-                                        return Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      }
-                                      return OrderDataTable(
-                                        reporttype: ReportType.hourly,
-                                        orders: snapshot.data!,
-                                        onSort: (columnIndex, ascending) {
-                                          final newQueryBuilder =
-                                              _store.box<FinModel>().query();
-                                          final sortField = FinModel_.id;
-                                          // columnIndex == 0 ? FinModel_.id: FinModel_.price;
-                                          newQueryBuilder.order(
-                                            sortField,
-                                            flags: ascending
-                                                ? 0
-                                                : Order.descending,
-                                          );
+                          child: Container(
+                            constraints: BoxConstraints(maxHeight: 400),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    StreamBuilder<List<FinModel>>(
+                                        stream: state.getAllExpense(),
+                                        // stream: state.getAllExpense(),
+                                        builder: (context, snapshot) {
+                                          if (!snapshot.hasData) {
+                                            return Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            );
+                                          }
 
-                                          setState(() {
-                                            _stream = newQueryBuilder
-                                                .watch(triggerImmediately: true)
-                                                .map((query) => query.find());
+                                          var orders = snapshot.data!;
+                                          var newMap = groupBy(
+                                              orders,
+                                              (FinModel obj) =>
+                                                  obj.createdTime);
+                                          double total = 0;
+
+                                          SplayTreeMap<DateTime, double>
+                                              debitMap =
+                                              SplayTreeMap<DateTime, double>();
+                                          SplayTreeMap<DateTime, double>
+                                              creditMap =
+                                              SplayTreeMap<DateTime, double>();
+                                          List<DateTime> months = [];
+                                          orders.forEach((fin) {
+                                            // group by only day
+                                            DateTime key;
+
+                                            key = DateTime.utc(
+                                              fin.createdTime.year,
+                                              fin.createdTime.month,
+                                            );
+                                            months.add(key);
+                                            if (fin.type) {
+                                              if (debitMap.containsKey(key)) {
+                                                debitMap[key] =
+                                                    debitMap[key]! + fin.price;
+                                              } else {
+                                                debitMap[key] = fin.price;
+                                              }
+                                            } else {
+                                              if (creditMap.containsKey(key)) {
+                                                creditMap[key] =
+                                                    creditMap[key]! + fin.price;
+                                              } else {
+                                                creditMap[key] = fin.price;
+                                              }
+                                            }
+                                            print(total);
                                           });
-                                        },
-                                        store: _store,
-                                      );
-                                    }),
-                              ],
+                                          months = months.toSet().toList();
+                                          return SingleChildScrollView(
+                                            child: Column(
+                                              children: [
+                                                for (DateTime month in months)
+                                                  Column(
+                                                    children: [
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceEvenly,
+                                                        children: [
+                                                          // Text("${month}"),
+                                                          Text(
+                                                              "${month.getMonthString()} ${month.year}"),
+                                                          Container(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(4.0),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              border: Border.all(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .withOpacity(
+                                                                          .5)),
+                                                              borderRadius:
+                                                                  const BorderRadius
+                                                                          .all(
+                                                                      Radius.circular(
+                                                                          5)),
+                                                            ),
+                                                            child: const Icon(
+                                                              Icons
+                                                                  .call_received_outlined,
+                                                              color: Colors
+                                                                  .blueAccent,
+                                                              size: 18,
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                              "${debitMap[month]}"),
+                                                          Container(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(4.0),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              border: Border.all(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .withOpacity(
+                                                                          .5)),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .all(Radius
+                                                                          .circular(
+                                                                              5)),
+                                                            ),
+                                                            child: const Icon(
+                                                              Icons
+                                                                  .call_made_outlined,
+                                                              color: Colors
+                                                                  .redAccent,
+                                                              size: 18,
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                              "${creditMap[month]}"),
+                                                        ],
+                                                      ),
+                                                      const Padding(
+                                                        padding:
+                                                            EdgeInsets.all(8.0),
+                                                        child: Divider(),
+                                                      ),
+                                                    ],
+                                                  )
+                                              ],
+                                            ),
+                                          );
+                                        }),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -925,104 +701,112 @@ class _DashBoardState extends State<DashBoard>
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(4)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                StreamBuilder<List<FinModel>>(
-                                    stream: state.getAllExpense(),
-                                    // stream: state.getAllExpense(),
-                                    builder: (context, snapshot) {
-                                      if (!snapshot.hasData) {
-                                        return Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      }
-                                      var newMap = groupBy(snapshot.data!,
-                                          (FinModel obj) => obj.tag);
-                                      double total = 0;
-                                      var orders = snapshot.data!;
-                                      // });
-                                      SplayTreeMap<String, double> finMap =
-                                          SplayTreeMap<String, double>();
-                                      orders.forEach((fin) {
-                                        // group by only day
-                                        String key;
-                                        bool type = fin.type;
-                                        key = fin.tag.target!.tag;
-                                        if (finMap.containsKey(key)) {
-                                          finMap[key] =
-                                              finMap[key]! + fin.price;
-                                        } else {
-                                          finMap[key] = fin.price;
-                                        }
-                                        total += fin.price;
-                                        print(total);
-                                      });
+                          child: Container(
+                            constraints: BoxConstraints(maxHeight: 400),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    StreamBuilder<List<FinModel>>(
+                                        stream: state.getAllExpense(),
+                                        // stream: state.getAllExpense(),
+                                        builder: (context, snapshot) {
+                                          if (!snapshot.hasData) {
+                                            return Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            );
+                                          }
+                                          var newMap = groupBy(snapshot.data!,
+                                              (FinModel obj) => obj.tag);
+                                          double total = 0;
+                                          var orders = snapshot.data!;
+                                          // });
+                                          SplayTreeMap<String, double> finMap =
+                                              SplayTreeMap<String, double>();
+                                          orders.forEach((fin) {
+                                            // group by only day
+                                            String key;
+                                            bool type = fin.type;
+                                            key = fin.tag.target!.tag;
+                                            if (finMap.containsKey(key)) {
+                                              finMap[key] =
+                                                  finMap[key]! + fin.price;
+                                            } else {
+                                              finMap[key] = fin.price;
+                                            }
+                                            total += fin.price;
+                                            print(total);
+                                          });
 
-                                      return SingleChildScrollView(
-                                        child: Column(
-                                          children: [
-                                            for (var key in finMap.keys)
-                                              Column(
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
+                                          return SingleChildScrollView(
+                                            child: Column(
+                                              children: [
+                                                for (var key in finMap.keys)
+                                                  Column(
                                                     children: [
-// Text("$v\t ${finMap[v]}"),
-                                                      TextButton(
-                                                          onPressed: () {
-/*
-                                                                               showModalBottomSheet(
-                                context: context,
-                                builder: (context) {
-                                  return Material(
-                                    child: ListView(
-                                      children: order.tag.target!.orders.map(
-                                        (_) {
-                                          print(
-                                                  '${_.id}    ${_.tag.target?.tag}    \$${_.price}    \$${_.createdTime}    \$${_.updatedTime} \$${_.comments}');
-                                          return ListTile(
-                                            title: Text(
-                                                    '${_.id}    ${_.tag.target?.tag}    \$${_.price}}'),
-                                            // trailing: Text(
-                                            //   "${_.comments}",
-                                            //   overflow: TextOverflow.ellipsis,
-                                            // ),
-                                          );
-                                        },
-                                      ).toList(),
-                                    ),
-                                  );
-                                },
-                              );
-             
-                                  */
-                                                          },
-                                                          child: Text(key)),
-                                                      Text("${finMap[key]}")
-                                                    ],
-                                                  ),
-                                                  Divider(),
-                                                ],
-                                              )
-
-                                            // for (var v in finMap.values)
-                                            //   Text("$v")
-                                            // finMap.
-                                            //                                       finMap.forEach((level, players) =>
-                                            //  print(level);
-                                            //  print(players);
-
-                                            // )
-                                          ],
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceEvenly,
+                                                        children: [
+                                                          // Text("$v\t ${finMap[v]}"),
+                                                          TextButton(
+                                                              onPressed: () {
+                                                                // TODO: Tag detail
+                                                                /*    
+                                                                                   showModalBottomSheet(
+                                    context: context,
+                                    builder: (context) {
+                                      return Material(
+                                        child: ListView(
+                                          
+                                          children: order.tag.target!.orders.map(
+                                            (_) {
+                                              print(
+                                                      '${_.id}    ${_.tag.target?.tag}    \$${_.price}    \$${_.createdTime}    \$${_.updatedTime} \$${_.comments}');
+                                              return ListTile(
+                                                title: Text(
+                                                        '${_.id}    ${_.tag.target?.tag}    \$${_.price}}'),
+                                                // trailing: Text(
+                                                //   "${_.comments}",
+                                                //   overflow: TextOverflow.ellipsis,
+                                                // ),
+                                              );
+                                            },
+                                          ).toList(),
                                         ),
                                       );
-                                    }),
-                              ],
+
+                                    },
+                                  );
+                                  */
+                                                              },
+                                                              child: Text(key)),
+                                                          Text("${finMap[key]}")
+                                                        ],
+                                                      ),
+                                                      Divider(),
+                                                    ],
+                                                  )
+
+                                                // for (var v in finMap.values)
+                                                //   Text("$v")
+                                                // finMap.
+                                                //                                       finMap.forEach((level, players) =>
+                                                //  print(level);
+                                                //  print(players);
+
+                                                // )
+                                              ],
+                                            ),
+                                          );
+                                        }),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -1041,10 +825,54 @@ class _DashBoardState extends State<DashBoard>
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            "Monthly Expenditure",
+                            "Pick Date to see Expenditure",
                             style: TextStyle(fontSize: 20),
                           ),
                         ),
+                        // TODO Show data on picker date
+                        /*
+                        Container(
+                          constraints: BoxConstraints(maxHeight: 400),
+                          child: Stack(
+                            children: <Widget>[
+                              Positioned(
+                                left: 0,
+                                right: 0,
+                                top: 0,
+                                height: 80,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text('Selected date: $_selectedDate'),
+                                    Text('Selected date count: $_dateCount'),
+                                    Text('Selected range: $_range'),
+                                    Text('Selected ranges count: $_rangeCount')
+                                  ],
+                                ),
+                              ),
+                              Positioned(
+                                left: 0,
+                                top: 80,
+                                right: 0,
+                                bottom: 0,
+                                child: SfDateRangePicker(
+                                  onSelectionChanged: _onSelectionChanged,
+                                  selectionMode:
+                                      DateRangePickerSelectionMode.range,
+                                  initialSelectedRange: PickerDateRange(
+                                      DateTime.now()
+                                          .subtract(const Duration(days: 4)),
+                                      DateTime.now()
+                                          .add(const Duration(days: 3))),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                   */
                         Card(
                           elevation: 0,
                           shape: RoundedRectangleBorder(
@@ -1055,7 +883,8 @@ class _DashBoardState extends State<DashBoard>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 StreamBuilder<List<FinModel>>(
-                                    stream: state.getAllExpense(),
+                                    stream: state.getDateExpense(
+                                        DateTime.now(), DateTime.now()),
                                     builder: (context, snapshot) {
                                       if (!snapshot.hasData) {
                                         return Center(

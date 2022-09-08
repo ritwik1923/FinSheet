@@ -65,6 +65,7 @@ class FinsheetLoadedDBState extends FinsheetState {
   Future<void> delFin(FinModel data) async {
     store.box<FinModel>().remove(data.id);
   }
+
   Future<void> delFinAll() async {
     store.box<FinModel>().removeAll();
     store.box<TagModel>().removeAll();
@@ -79,6 +80,11 @@ class FinsheetLoadedDBState extends FinsheetState {
       .query()
       .watch(triggerImmediately: true)
       .map((query) => query.find());
+  // Future<TagModel> getTagsObj(String tag) => store
+  //     .box<TagModel>()
+  //     .query(TagModel_.tag.equals(tag))
+  //     // .watch(triggerImmediately: true)
+  //     // .map((query) => query.find());
 
   Stream<List<FinModel>> getminExpense() {
     DateTime startDate = DateTime.now().subtract(Duration(minutes: 5));
@@ -105,26 +111,24 @@ class FinsheetLoadedDBState extends FinsheetState {
 
     return store
         .box<FinModel>()
-        // .query(FinModel_.createdTime.between(startDate.millisecondsSinceEpoch,
-        //     endDate.millisecondsSinceEpoch - 1))
         .query(FinModel_.createdTime.between(
-          DateTime.now().subtract(Duration(days: 1)).millisecondsSinceEpoch,
-          DateTime.now().millisecondsSinceEpoch - 1))
+            DateTime.now().subtract(Duration(days: 1)).millisecondsSinceEpoch,
+            DateTime.now().millisecondsSinceEpoch - 1))
         .watch(triggerImmediately: true)
         .map((query) => query.find());
   }
 
-  /*
-  Stream<List<FinModel>> getTagsExpense(String tag) {
-    
+  Stream<List<FinModel>> getDateExpense(DateTime startdate, DateTime enddate) {
+    // DateTime ss =
     return store
         .box<FinModel>()
-        .query(FinModel_.tag.target
-        .equals('tag'))
+        .query(FinModel_.createdTime.between(
+            startdate.subtract(Duration(days: 1)).millisecondsSinceEpoch,
+            enddate.millisecondsSinceEpoch))
         .watch(triggerImmediately: true)
         .map((query) => query.find());
   }
-*/
+
   Stream<List<FinModel>> getWeeklyExpense() => store
       .box<FinModel>()
       .query(FinModel_.createdTime.between(
