@@ -11,5 +11,3 @@
 - [ ]  create widget to add price with tags
 - [ ]  shimmering loading screen in flutter
 
-# note
-- [ ]  scrcpy
